@@ -1,6 +1,6 @@
 ﻿using Domain;
 
-namespace Services;
+namespace Services.Services;
 
 public class EstimationGameService
 {
@@ -9,10 +9,5 @@ public class EstimationGameService
     public EstimationGame GetEstimationGame()
     {
         return _estimationGame;
-    }
-
-    public void CreateHub()
-    {
-        _estimationGame.createHub();
     }
 }

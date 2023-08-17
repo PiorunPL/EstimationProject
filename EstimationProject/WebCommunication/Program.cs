@@ -2,6 +2,14 @@ using System.Text;
 using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Persistance;
+using Persistance.ListRepositoryImplementations;
+using Services;
+using Services.Interfaces;
+using Services.Interfaces.Input;
+using Services.Interfaces.Repository;
+using Services.Services;
+using WebApplication1.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +50,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     });
+
+builder.Services.AddSingleton<IRepositoryUser, ListRepositoryUser>();
+builder.Services.AddTransient<IUserService, UserService>();
+
+
+
 
 var app = builder.Build();
 

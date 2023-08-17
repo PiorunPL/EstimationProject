@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Domain;
+namespace WebApplication1.Hubs;
 
 [Authorize]
 public class EstimationGameHub : Hub
@@ -19,6 +19,26 @@ public class EstimationGameHub : Hub
 
         // await Clients.All.SendAsync("Receive Message", $"{Clients.Groups("test")}");
         // return base.OnConnectedAsync();
+    }
+
+    public async Task CreateSession(string sessionName)
+    {
+        
+    }
+
+    public async Task JoinSession(string sessionName)
+    {
+        
+    }
+
+    public async Task LeaveSession(string sessionName)
+    {
+        
+    }
+
+    public async Task EndSession(string sessionName)
+    {
+        
     }
     
     public async Task TestMe(string someRandomText)
