@@ -4,10 +4,14 @@ namespace Services.Services;
 
 public class EstimationGameService
 {
-    private EstimationGame _estimationGame = new EstimationGame();
-
-    public EstimationGame GetEstimationGame()
-    {
-        return _estimationGame;
-    }
+    // //TODO: Rebuild using Repository pattern
+    // public void createNewGameSession(string gameSessionId)
+    // {
+    //     List<GameSession> activeGameSessions = GameSession.ActiveGameSessions;
+    //     if (activeGameSessions.FirstOrDefault(game => game.GameSessionId == gameSessionId) != null)
+    //         throw new ArgumentException("GameSession already exists");
+    //
+    //     GameSession session = new GameSession(gameSessionId);
+    //     activeGameSessions.Add(session);
+    // }
 }

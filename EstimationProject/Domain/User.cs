@@ -12,4 +12,14 @@ public class User
         Username = username;
         Password = password;
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null)
+            return false;
+        if (!(obj is User))
+            return false;
+
+        return Email.Equals(((User)obj).Email);
+    }
 }

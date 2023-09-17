@@ -19,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo() { Title = "EstimationProjectAPI", Version = "v1"});
@@ -86,6 +87,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddSingleton<IRepositoryUser, ListRepositoryUser>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddSingleton<IGameSessionService, GameSessionService>();
 
 
 
