@@ -5,6 +5,9 @@ namespace Services.Interfaces.Input;
 public interface IGameSessionService
 {
     //User Related
+    public void AddNewSessionUser(string email);
+    public void RemoveSessionUser(string email);
+    public void SetSessionForSessionUser(string email, string? sessionId);
     public void JoinSession(string email, string sessionId);
     public void LeaveSession(string email, string sessionId);
     public bool IsUserInSession(string email, string sessionId);

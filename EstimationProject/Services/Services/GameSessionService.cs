@@ -13,6 +13,38 @@ public class GameSessionService : IGameSessionService
         _repositoryUser = repositoryUser;
     }
 
+    public void AddNewSessionUser(string email)
+    {
+        var foundSessionUser = GameSessionUser.GameSessionUsers.FirstOrDefault(user => user.User.Email.Equals(email));
+        if (foundSessionUser != null)
+            throw new InvalidOperationException();
+
+        var foundUser = _repositoryUser.GetUser(email);
+        if (foundUser == null)
+            throw new ArgumentException();
+
+        var sessionUser = new GameSessionUser(foundUser);
+        GameSessionUser.GameSessionUsers.Add(sessionUser);
+    }
+
+    public void RemoveSessionUser(string email)
+    {
+        var foundSessionUser = GameSessionUser.GameSessionUsers.FirstOrDefault(user => user.User.Email.Equals(email));
+        if (foundSessionUser == null)
+            throw new ArgumentException();
+
+        GameSessionUser.GameSessionUsers.Remove(foundSessionUser);
+    }
+
+    public void SetSessionForSessionUser(string email, string? sessionId)
+    {
+        var foundSessionUser = GameSessionUser.GameSessionUsers.FirstOrDefault(user => user.User.Email.Equals(email));
+        if (foundSessionUser == null)
+            throw new ArgumentException();
+
+        foundSessionUser.SessionId = sessionId;
+    }
+
     public void JoinSession(string email, string sessionId)
     {
         //TODO: Valid User
@@ -25,6 +57,7 @@ public class GameSessionService : IGameSessionService
 
         //TODO: Add Timer to wait for connection from user
         foundSession.AddUser(foundUser);
+        SetSessionForSessionUser(email, sessionId);
     }
 
     public void LeaveSession(string email, string sessionId)
@@ -35,6 +68,7 @@ public class GameSessionService : IGameSessionService
         if (!foundSession.IsUserInSession(foundUser))
             throw new ArgumentException($"User with given email ({email}) is not in session ({sessionId})!");
         
+        SetSessionForSessionUser(email, null);
         foundSession.RemoveUser(foundUser);
     }
 
