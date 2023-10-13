@@ -5,11 +5,11 @@ namespace Persistance.ListRepositoryImplementations;
 
 public class ListRepositoryUser : IRepositoryUser
 {
-    public List<User> Users = new List<User>();
+    private List<User> _users = new List<User>();
     
     public User? GetUser(string email)
     {
-        return  Users.FirstOrDefault((user => user.Email == email));
+        return  _users.FirstOrDefault((user => user.Email == email));
     }
 
     public void RemoveUser(string email)
@@ -17,9 +17,9 @@ public class ListRepositoryUser : IRepositoryUser
         var foundUser = GetUser(email);
         if (foundUser != null)
         {
-            lock (Users)
+            lock (_users)
             {
-                Users.Remove(foundUser);
+                _users.Remove(foundUser);
             }
         }
     }
@@ -34,12 +34,12 @@ public class ListRepositoryUser : IRepositoryUser
         if (user.Username == "" || user.Password == "" || user.Email == "")
             return;
 
-        lock (Users)
+        lock (_users)
         {
             var foundUser = GetUser(user.Email);
             if (foundUser == null)
             {
-                Users.Add(user);
+                _users.Add(user);
             }
         }
     }
@@ -50,7 +50,7 @@ public class ListRepositoryUser : IRepositoryUser
         if (foundUser == null)
             return;
 
-        lock (Users)
+        lock (_users)
         {
             foundUser.Password = user.Password;
             foundUser.Email = user.Email;

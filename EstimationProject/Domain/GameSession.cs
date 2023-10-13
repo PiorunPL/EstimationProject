@@ -3,62 +3,55 @@ namespace Domain;
 public class GameSession
 {
     //TODO: Add list for users which can do important changes for session aka sessionAdministrators
-    public static readonly List<GameSession> ActiveGameSessions = new List<GameSession>();
-    public static readonly List<GameSession> ClosedGameSessions = new List<GameSession>(); //What to do with closed game sessions?
-
     public string GameSessionId { get; }
     public string GameSessionName { get; set; }
+    public GameSessionStatus Status { get; set; }
     public List<GameSessionUser> ActiveUsers { get; } = new List<GameSessionUser>();
-    public EstimationGame EstimationGame { get;  }= new EstimationGame();
+    public EstimationGame EstimationGame { get;  } = new EstimationGame();
     
-    private GameSession(string id, string name)
-    {
+    private GameSession(string id, string name)    {
         GameSessionId = id;
         GameSessionName = name;
-        
     }
 
-    public static void CreateSession(string sessionId, string sessionName)
+    public static GameSession CreateSession(string sessionId, string sessionName, GameSessionStatus status = GameSessionStatus.Inactive)
     {
-        GameSession? foundActiveGameSession =
-            ActiveGameSessions.FirstOrDefault(session => session.GameSessionId.Equals(sessionId));
-        if (foundActiveGameSession != null)
-            throw new ArgumentException($"Session with given ID ({sessionId}) already exists!");
-        
-        //TODO: Add validation for ClosedGameSessions
-        
-        GameSession session = new GameSession(sessionId, sessionName);
-        ActiveGameSessions.Add(session);
+        GameSession session = new GameSession(sessionId, sessionName)
+        {
+            Status = status
+        };
+        return session;
     }
 
-    public void CloseSession()
+    public void AddUser(GameSessionUser user)
     {
-        if (ActiveGameSessions.Contains(this))
-            ActiveGameSessions.Remove(this);
-        
-        if (!ClosedGameSessions.Contains(this))
-            ClosedGameSessions.Add(this);
+        //TODO: Add next level validation for multiple same users
+        ActiveUsers.Add(user);
     }
 
-    public void AddUser(User user)
-    {
-        //TODO: Add next level validation for multiple same users;
-        GameSessionUser sessionUser = new GameSessionUser(user);
-        ActiveUsers.Add(sessionUser);
-    }
-
-    public void RemoveUser(User user)
-    {
-        GameSessionUser? foundSessionUser = ActiveUsers.FirstOrDefault(sessionUser => sessionUser.User.Equals(user));
+    public void RemoveUser(string email) {
+        GameSessionUser? foundSessionUser = ActiveUsers.FirstOrDefault(sessionUser => sessionUser.User.Email == email);
         if (foundSessionUser != null)
             ActiveUsers.Remove(foundSessionUser);
     }
 
-    public bool IsUserInSession(User user)
+    public void RemoveUser(GameSessionUser user)
     {
-        GameSessionUser? foundSessionUser = ActiveUsers.FirstOrDefault(sessionUser => sessionUser.User.Equals(user));
+        GameSessionUser? foundSessionUser = ActiveUsers.FirstOrDefault(sessionUser => sessionUser.Equals(user));
+        if (foundSessionUser != null)
+            ActiveUsers.Remove(foundSessionUser);
+    }
+
+    public bool IsUserInSession(string email)
+    {
+        GameSessionUser? foundSessionUser = ActiveUsers.FirstOrDefault(sessionUser => sessionUser.User.Email == email);
         if (foundSessionUser == null)
             return false;
         return true;
+    }
+
+    public bool IsUserInSession(GameSessionUser user)
+    {
+        return ActiveUsers.Contains(user);
     }
 }

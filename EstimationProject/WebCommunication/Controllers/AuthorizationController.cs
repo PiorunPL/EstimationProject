@@ -13,12 +13,12 @@ namespace WebApplication1.Controllers;
 [Route("api/authorize")]
 public class AuthorizationController : ControllerBase
 {
-    private readonly IConfiguration _config;
+    // private readonly IConfiguration _config;
     private readonly IUserService _userService;
 
     public AuthorizationController(IConfiguration config, IUserService userService)
     {
-        _config = config;
+        // _config = config;
         _userService = userService;
     }
     
@@ -87,10 +87,4 @@ public class AuthorizationController : ControllerBase
         }
     }
 
-    
-    
-    
-
-    
-    
 }

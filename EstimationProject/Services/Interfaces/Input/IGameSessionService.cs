@@ -16,8 +16,8 @@ public interface IGameSessionService
     //Session Related
     public void CreateSession(string sessionId);
     public void CreateSession(string sessionId, string sessionName);
-    public void CloseSession(string sessionId);
+    public void PauseSession(string sessionId);
     public GameSession GetSession(string sessionId);
-    public List<GameSession> GetAllActiveSessions();
-    public List<GameSession> GetAllClosedSessions();
+    public List<GameSession> GetAllSessions();
+    public List<GameSession> GetAllSessions(string statusLiteral);
 }

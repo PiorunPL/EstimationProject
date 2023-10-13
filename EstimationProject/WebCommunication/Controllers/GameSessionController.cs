@@ -90,7 +90,7 @@ public class GameSessionController : ControllerBase
     {
         try
         {
-            _gameSessionService.CloseSession(sessionId);
+            _gameSessionService.PauseSession(sessionId);
         }
         catch (Exception e)
         {
@@ -100,29 +100,16 @@ public class GameSessionController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("active-sessions")]
-    public IActionResult GetAllActiveSessions()
+    [HttpGet("sessions")]
+    public IActionResult GetAllSessions([Optional]string? status)
     {
         List<GameSession> result;
         try
         {
-            result = _gameSessionService.GetAllActiveSessions();
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok(result);
-    }
-
-    [HttpGet("closed-sessions")]
-    public IActionResult GetAllClosedSessions()
-    {
-        List<GameSession> result;
-        try
-        {
-            result = _gameSessionService.GetAllClosedSessions();
+            if (status == null)
+                result = _gameSessionService.GetAllSessions();
+            else
+                result = _gameSessionService.GetAllSessions(status);
         }
         catch (Exception e)
         {

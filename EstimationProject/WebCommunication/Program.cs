@@ -86,6 +86,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddSingleton<IRepositoryUser, ListRepositoryUser>();
+builder.Services.AddSingleton<IRepositoryGameSession, ListRepositoryGameSession>();
+builder.Services.AddSingleton<IRepositoryGameSessionUser, ListRepositoryGameSessionUser>();
+
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddSingleton<IGameSessionService, GameSessionService>();
 

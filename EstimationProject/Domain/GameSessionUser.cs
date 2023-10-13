@@ -2,8 +2,6 @@ namespace Domain;
 
 public class GameSessionUser
 {
-    public static readonly List<GameSessionUser> GameSessionUsers = new List<GameSessionUser>();
-    
     public GameSessionUser(User user)
     {
         User = user;

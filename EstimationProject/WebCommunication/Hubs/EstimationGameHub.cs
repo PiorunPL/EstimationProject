@@ -21,6 +21,8 @@ public class EstimationGameHub : Hub
         string email = GetEmailFromContext(Context);
         await Clients.All.SendAsync("Receive Message", $"{email} - {Context.ConnectionId} has joined");
         
+        _gameSessionService.AddNewSessionUser(email);
+        
         await base.OnConnectedAsync();
     }
 
@@ -43,12 +45,13 @@ public class EstimationGameHub : Hub
         }
     }
 
-    public Task LeaveSession(string sessionName)
+    public async Task LeaveSession(string sessionName)
     {
         string email = GetEmailFromContext(Context);
         
         _gameSessionService.LeaveSession(email, sessionName);
-        return Task.CompletedTask;
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, sessionName); //?
+        // return Task.CompletedTask;
     }
 
     public async Task TestMeGroup(string sessionName, string message)
