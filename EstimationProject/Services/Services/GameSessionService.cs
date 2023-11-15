@@ -82,8 +82,8 @@ public class GameSessionService : IGameSessionService
         
         using (TransactionScope scope = new TransactionScope())
         {
-            SetSessionForSessionUser(email, null);
             foundSession.RemoveUser(foundSessionUser);
+            SetSessionForSessionUser(email, null);
         }
     }
 
