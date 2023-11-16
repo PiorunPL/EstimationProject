@@ -2,13 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Domain;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
+using Services.Services.UserService.Validators;
 using WebCommunication.Contracts.UserContracts;
 
-namespace Services.Services;
+namespace Services.Services.UserService;
 
 public class UserService : IUserService
 {
@@ -24,7 +26,7 @@ public class UserService : IUserService
 
     public string RegisterUser(RegisterUserRequest request)
     {
-        //TODO: INPUT VALIDATION
+        new RegisterUserRequestValidator().ValidateAndThrow(request); 
         
         var foundUser = _repositoryUser.GetUser(request.Email);
         if (foundUser != null)

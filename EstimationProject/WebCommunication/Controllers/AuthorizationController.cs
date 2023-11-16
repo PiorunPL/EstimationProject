@@ -33,7 +33,7 @@ public class AuthorizationController : ControllerBase
         }
         catch (Exception e)
         {
-            return BadRequest("Invalid input!");
+            return BadRequest(e.Message);
         }
 
         return Ok(generatedToken);
