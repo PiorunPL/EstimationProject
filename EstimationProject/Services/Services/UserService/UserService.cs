@@ -6,13 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
+using WebCommunication.Contracts.UserContracts;
 
 namespace Services.Services;
 
 public class UserService : IUserService
 {
-    private IRepositoryUser _repositoryUser;
-    private IConfiguration _config;
+    private readonly IRepositoryUser _repositoryUser;
+    private readonly IConfiguration _config;
 
     public UserService(IConfiguration config, IRepositoryUser repositoryUser)
     {
@@ -21,17 +22,17 @@ public class UserService : IUserService
     }
 
 
-    public string RegisterUser(string email, string name, string password)
+    public string RegisterUser(RegisterUserRequest request)
     {
-        var foundUser = _repositoryUser.GetUser(email);
+        //TODO: INPUT VALIDATION
+        
+        var foundUser = _repositoryUser.GetUser(request.Email);
         if (foundUser != null)
             throw new ArgumentException();
-
-        //TODO: INPUT VALIDATION
         
         //TODO: HASHING PASSWORD
 
-        User user = new User(email,name, password);
+        User user = new User(request.Email,request.Username, request.Password);
         
         _repositoryUser.AddUser(user);
 

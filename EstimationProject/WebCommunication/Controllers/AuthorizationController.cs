@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces.Input;
 using WebApplication1.Other;
+using WebCommunication.Contracts.UserContracts;
 
 namespace WebApplication1.Controllers;
 
@@ -23,12 +24,12 @@ public class AuthorizationController : ControllerBase
     }
     
     [HttpPost("Register")]
-    public IActionResult Register(string email, string username, string password)
+    public IActionResult Register(RegisterUserRequest request)
     {
         string generatedToken;
         try
         {
-            generatedToken =  _userService.RegisterUser(email, username, password);
+            generatedToken =  _userService.RegisterUser(request);
         }
         catch (Exception e)
         {
