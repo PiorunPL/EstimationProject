@@ -10,6 +10,7 @@ using Services.Interfaces;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
 using Services.Services;
+using Services.Services.UserService;
 using WebApplication1.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
