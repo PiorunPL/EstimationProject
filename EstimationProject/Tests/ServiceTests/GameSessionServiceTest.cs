@@ -123,8 +123,10 @@ public class GameSessionServiceTest
         string email = "test@email.com";
         string name = "test";
         string password = "test";
+
+        var hashedPassword = Password.CreateHashedPassword(password);
         
-        User user = new User(email, name, password);
+        User user = new User(email, name, hashedPassword);
         return user;
     }
 

@@ -4,9 +4,9 @@ public class User
 {
     public string Email { get; set; }
     public string Username { get; set; }
-    public string Password { get; set; } //TODO Change plaintext password to hashed form
+    public Password Password { get; set; }
 
-    public User(string email, string username, string password)
+    public User(string email, string username, Password password)
     {
         Email = email;
         Username = username;
@@ -15,11 +15,19 @@ public class User
 
     public override bool Equals(object? obj)
     {
-        if (obj == null)
-            return false;
-        if (!(obj is User))
+        if (obj is not User user)
             return false;
 
-        return Email.Equals(((User)obj).Email);
+        return Email.Equals(user.Email);
+    }
+
+    protected bool Equals(User other)
+    {
+        return Email == other.Email;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Email, Username, Password);
     }
 }

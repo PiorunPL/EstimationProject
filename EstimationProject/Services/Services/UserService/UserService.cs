@@ -31,10 +31,10 @@ public class UserService : IUserService
         var foundUser = _repositoryUser.GetUser(request.Email);
         if (foundUser != null)
             throw new ArgumentException();
-        
-        //TODO: HASHING PASSWORD
 
-        User user = new User(request.Email,request.Username, request.Password);
+        var hashedPassword = Password.CreateHashedPassword(request.Password);
+
+        User user = new User(request.Email,request.Username, hashedPassword);
         
         _repositoryUser.AddUser(user);
 
@@ -47,7 +47,7 @@ public class UserService : IUserService
         if (foundUser == null)
             throw new ArgumentException();
 
-        if (foundUser.Password != password)
+        if (foundUser.Password.ComparePassword(password))
             throw new ArgumentException();
 
         return GenerateToken(foundUser);
