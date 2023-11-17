@@ -31,7 +31,7 @@ public class ListRepositoryUser : IRepositoryUser
 
     public void AddUser(User user)
     {
-        if (user.Username == "" || user.Password == "" || user.Email == "")
+        if (user.Username == "" || user.Password.HashedPassword == "" || user.Password.Salt == "" || user.Email == "")
             return;
 
         lock (_users)
