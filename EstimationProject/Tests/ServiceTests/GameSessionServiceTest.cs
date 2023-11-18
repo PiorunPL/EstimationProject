@@ -3,6 +3,8 @@ using Moq;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
 using Services.Services;
+using WebCommunication.Contracts.GameSessionContracts;
+using WebCommunication.Contracts.Other;
 
 namespace Tests.ServiceTests;
 
@@ -76,10 +78,10 @@ public class GameSessionServiceTest
             mockRepositoryGameSession.Object, mockRepositoryGameSessionUser.Object);
         
         //Act
-        gameSessionService.JoinSession(user.Email, gameSession.GameSessionId);
+        gameSessionService.JoinSession(new TokenData(user.Email, user.Username), new JoinSessionRequest(gameSession.GameSessionId));
 
         //Assert
-        Assert.Contains<GameSessionUser>(gameSession.ActiveUsers,
+        Assert.Contains(gameSession.ActiveUsers,
             gameSessionUser => gameSessionUser.Equals(sessionUser));
         Assert.Equal(expectedSessionId, sessionUser.SessionId);
     }

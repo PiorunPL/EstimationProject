@@ -1,9 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces.Input;
 using WebApplication1.Other;
 using WebCommunication.Contracts.UserContracts;
@@ -14,12 +10,10 @@ namespace WebApplication1.Controllers;
 [Route("api/authorize")]
 public class AuthorizationController : ControllerBase
 {
-    // private readonly IConfiguration _config;
     private readonly IUserService _userService;
 
-    public AuthorizationController(IConfiguration config, IUserService userService)
+    public AuthorizationController(IUserService userService)
     {
-        // _config = config;
         _userService = userService;
     }
     
@@ -41,16 +35,16 @@ public class AuthorizationController : ControllerBase
     
 
     [HttpGet("Login")]
-    public IActionResult Login(string email, string password)
+    public IActionResult Login([FromQuery] LoginUserRequest request)
     {
         string generatedToken;
         try
         {
-            generatedToken = _userService.LoginUser(email, password);
+            generatedToken = _userService.LoginUser(request);
         }
         catch (Exception e)
         {
-            return BadRequest("Invalid input!");
+            return BadRequest(e.Message);
         }
 
         return Ok(generatedToken);
@@ -62,13 +56,12 @@ public class AuthorizationController : ControllerBase
     {
         try
         {
-            var result = Helper.GetTokenData(HttpContext);
-            _userService.RemoveUser(result.email);
+            _userService.DeleteUserAccount(Helper.GetTokenData(HttpContext));
             
         }
         catch (Exception e)
         {
-            return BadRequest("Invalid JWT token!");
+            return BadRequest("Invalid JWT token!"); //TODO: Change exception message 
         }
         return Ok();
     }
@@ -79,12 +72,11 @@ public class AuthorizationController : ControllerBase
     {
         try
         {
-            var result = Helper.GetTokenData(HttpContext);
-            return Ok(_userService.RefreshToken(result.email, result.name));
+            return Ok(_userService.RefreshToken(Helper.GetTokenData(HttpContext)));
         }
         catch (Exception e)
         {
-            return BadRequest("Invalid JWT token!");
+            return BadRequest("Invalid JWT token!"); //TODO: Change exception message
         }
     }
 

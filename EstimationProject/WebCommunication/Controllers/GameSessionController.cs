@@ -1,9 +1,9 @@
-using System.Runtime.InteropServices;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces.Input;
 using WebApplication1.Other;
+using WebCommunication.Contracts.GameSessionContracts;
 
 namespace WebApplication1.Controllers;
 
@@ -20,12 +20,11 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPut("join")]
-    public IActionResult JoinSession(string sessionId)
+    public IActionResult JoinSession(JoinSessionRequest request)
     {
         try
         {
-            var tokenData = Helper.GetTokenData(HttpContext);
-            _gameSessionService.JoinSession(tokenData.email, sessionId);
+            _gameSessionService.JoinSession(Helper.GetTokenData(HttpContext), request);
         }
         catch (Exception e)
         {
@@ -36,12 +35,11 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPut("leave")]
-    public IActionResult LeaveSession(string sessionId)
+    public IActionResult LeaveSession(LeaveSessionRequest request)
     {
         try
         {
-            var tokenData = Helper.GetTokenData(HttpContext);
-            _gameSessionService.LeaveSession(tokenData.email, sessionId);
+            _gameSessionService.LeaveSession(Helper.GetTokenData(HttpContext), request);
         }
         catch (Exception e)
         {
@@ -52,12 +50,12 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpGet("users")]
-    public IActionResult GetUsersInSession(string sessionId)
+    public IActionResult GetUsersInSession([FromQuery] GetUsersInSessionRequest request)
     {
         List<GameSessionUser> result;
         try
         {
-            result = _gameSessionService.GetAllUsersInSession(sessionId);
+            result = _gameSessionService.GetAllUsersInSession(request);
         }
         catch (Exception e)
         {
@@ -68,14 +66,11 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPost("create")]
-    public IActionResult CreateSession(string sessionId,[Optional] string? sessionName)
+    public IActionResult CreateSession(CreateSessionRequest request)
     {
         try
         {
-            if(sessionName == null)
-                _gameSessionService.CreateSession(sessionId);
-            else
-                _gameSessionService.CreateSession(sessionId, sessionName);
+            _gameSessionService.CreateSession(request);
         }
         catch (Exception e)
         {
@@ -85,12 +80,12 @@ public class GameSessionController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("close")]
-    public IActionResult CloseSession(string sessionId)
+    [HttpPut("pause")]
+    public IActionResult PauseSession(PauseSessionRequest request)
     {
         try
         {
-            _gameSessionService.PauseSession(sessionId);
+            _gameSessionService.PauseSession(request);
         }
         catch (Exception e)
         {
@@ -101,15 +96,12 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpGet("sessions")]
-    public IActionResult GetAllSessions([Optional]string? status)
+    public IActionResult GetAllSessions([FromQuery] GetAllSessionsRequest request)
     {
         List<GameSession> result;
         try
         {
-            if (status == null)
-                result = _gameSessionService.GetAllSessions();
-            else
-                result = _gameSessionService.GetAllSessions(status);
+            result = _gameSessionService.GetAllSessions(request);
         }
         catch (Exception e)
         {
@@ -120,12 +112,12 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpGet("")]
-    public IActionResult GetSession(string sessionId)
+    public IActionResult GetSession([FromQuery] GetSessionRequest request)
     {
         GameSession result;
         try
         {
-            result = _gameSessionService.GetSession(sessionId);
+            result = _gameSessionService.GetSession(request);
         }
         catch (Exception e)
         {
