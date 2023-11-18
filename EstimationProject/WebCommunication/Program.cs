@@ -1,12 +1,8 @@
 using System.Text;
-using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Persistance;
 using Persistance.ListRepositoryImplementations;
-using Services;
-using Services.Interfaces;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
 using Services.Services;

@@ -1,3 +1,4 @@
+using WebCommunication.Contracts.Other;
 using WebCommunication.Contracts.UserContracts;
 
 namespace Services.Interfaces.Input;
@@ -5,8 +6,8 @@ namespace Services.Interfaces.Input;
 public interface IUserService
 {
     public string RegisterUser(RegisterUserRequest request);
-    public string LoginUser(string email, string password);
-    public void RemoveUser(string email);
-    public string RefreshToken(string email, string name);
+    public string LoginUser(LoginUserRequest request);
+    public void DeleteUserAccount(TokenData tokenData);
+    public string RefreshToken(TokenData tokenData);
 
 }

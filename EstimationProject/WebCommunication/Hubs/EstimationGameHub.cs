@@ -45,12 +45,12 @@ public class EstimationGameHub : Hub
         }
     }
 
-    public async Task LeaveSession(string sessionName)
+    public async Task LeaveSession(string sessionId)
     {
         string email = GetEmailFromContext(Context);
         
-        _gameSessionService.LeaveSession(email, sessionName);
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, sessionName); //?
+        _gameSessionService.LeaveSession(email, sessionId);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, sessionId); //?
         // return Task.CompletedTask;
     }
 

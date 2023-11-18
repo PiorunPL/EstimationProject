@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
 using Services.Services.UserService.Validators;
+using WebCommunication.Contracts.Other;
 using WebCommunication.Contracts.UserContracts;
 
 namespace Services.Services.UserService;
@@ -41,30 +42,33 @@ public class UserService : IUserService
         return GenerateToken(user);
     }
 
-    public string LoginUser(string email, string password)
+    public string LoginUser(LoginUserRequest request)
     {
-        var foundUser = _repositoryUser.GetUser(email);
+        //TODO: Create Validators
+        // new LoginUserRequestValidator().ValidateAndThrow(request); 
+        
+        var foundUser = _repositoryUser.GetUser(request.Email);
         if (foundUser == null)
-            throw new ArgumentException();
+            throw new ArgumentException("Login data invalid");
 
-        if (foundUser.Password.ComparePassword(password))
-            throw new ArgumentException();
+        if (foundUser.Password.ComparePassword(request.Password))
+            throw new ArgumentException("Login data invalid ");
 
         return GenerateToken(foundUser);
     }
 
-    public void RemoveUser(string email)
+    public void DeleteUserAccount(TokenData tokenData)
     {
-        var foundUser = _repositoryUser.GetUser(email);
+        var foundUser = _repositoryUser.GetUser(tokenData.Email);
         if (foundUser == null)
             throw new ArgumentException();
 
         _repositoryUser.RemoveUser(foundUser);
     }
 
-    public string RefreshToken(string email, string name)
+    public string RefreshToken(TokenData tokenData)
     {
-        return GenerateToken(email, name);
+        return GenerateToken(tokenData.Email, tokenData.Username);
     }
 
     public string GenerateToken(User user)
