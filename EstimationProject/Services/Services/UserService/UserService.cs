@@ -1,6 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Ardalis.GuardClauses;
+using Ardalis.Result;
+using Ardalis.Result.FluentValidation;
 using Domain;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
@@ -25,50 +28,55 @@ public class UserService : IUserService
     }
 
 
-    public string RegisterUser(RegisterUserRequest request)
+    public Result<string> RegisterUser(RegisterUserRequest request)
     {
-        new RegisterUserRequestValidator().ValidateAndThrow(request); 
+        var validationResult = new RegisterUserRequestValidator().Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Result.Invalid(validationResult.AsErrors());
+        }
         
         var foundUser = _repositoryUser.GetUser(request.Email);
         if (foundUser != null)
-            throw new ArgumentException();
+            return Result.Conflict("User with given email already exists");
 
         var hashedPassword = Password.CreateHashedPassword(request.Password);
 
         User user = new User(request.Email,request.Username, hashedPassword);
-        
         _repositoryUser.AddUser(user);
 
-        return GenerateToken(user);
+        return Result.Success(GenerateToken(user));
     }
 
-    public string LoginUser(LoginUserRequest request)
+    public Result<string> LoginUser(LoginUserRequest request)
     {
-        //TODO: Create Validators
+        //TODO: Create Validators and return Result.Invalid if invalid
         // new LoginUserRequestValidator().ValidateAndThrow(request); 
         
         var foundUser = _repositoryUser.GetUser(request.Email);
         if (foundUser == null)
-            throw new ArgumentException("Login data invalid");
+            return Result.NotFound("User with given email does not exist");
 
         if (foundUser.Password.ComparePassword(request.Password))
-            throw new ArgumentException("Login data invalid ");
+            return Result.Unauthorized(); //TODO: Potentially to change return HTTP code
 
-        return GenerateToken(foundUser);
+        return Result.Success(GenerateToken(foundUser));
     }
 
-    public void DeleteUserAccount(TokenData tokenData)
+    public Result DeleteUserAccount(TokenData tokenData)
     {
         var foundUser = _repositoryUser.GetUser(tokenData.Email);
         if (foundUser == null)
-            throw new ArgumentException();
+            return Result.NotFound("User with given email does not exist");
 
         _repositoryUser.RemoveUser(foundUser);
+        return Result.Success();
     }
 
-    public string RefreshToken(TokenData tokenData)
+    public Result<string> RefreshToken(TokenData tokenData)
     {
-        return GenerateToken(tokenData.Email, tokenData.Username);
+        //TODO: Add validation if user still exist
+        return Result.Success(GenerateToken(tokenData.Email, tokenData.Username));
     }
 
     public string GenerateToken(User user)
