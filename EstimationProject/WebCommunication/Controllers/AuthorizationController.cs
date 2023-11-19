@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces.Input;
 using WebApplication1.Other;
 using WebCommunication.Contracts.UserContracts;
+using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
 
 namespace WebApplication1.Controllers;
 
@@ -18,66 +20,34 @@ public class AuthorizationController : ControllerBase
     }
     
     [HttpPost("Register")]
-    public IActionResult Register(RegisterUserRequest request)
+    public ActionResult<string> Register(RegisterUserRequest request)
     {
-        string generatedToken;
-        try
-        {
-            generatedToken =  _userService.RegisterUser(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-
-        return Ok(generatedToken);
+        var result = _userService.RegisterUser(request);
+        return result.ToActionResult(this);
     }
     
 
-    [HttpGet("Login")]
-    public IActionResult Login([FromQuery] LoginUserRequest request)
+    [HttpPost("Login")]
+    public ActionResult<string> Login(LoginUserRequest request)
     {
-        string generatedToken;
-        try
-        {
-            generatedToken = _userService.LoginUser(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-
-        return Ok(generatedToken);
+        var result = _userService.LoginUser(request);
+        return result.ToActionResult(this);
     }
 
     [Authorize]
     [HttpDelete("DeleteAccount")]
-    public IActionResult DeleteAccount()
+    public ActionResult DeleteAccount()
     {
-        try
-        {
-            _userService.DeleteUserAccount(Helper.GetTokenData(HttpContext));
-            
-        }
-        catch (Exception e)
-        {
-            return BadRequest("Invalid JWT token!"); //TODO: Change exception message 
-        }
-        return Ok();
+        var result = _userService.DeleteUserAccount(Helper.GetTokenData(HttpContext));
+        return result.ToActionResult(this);
     }
     
     [Authorize]
     [HttpGet("RefreshToken")]
-    public IActionResult RefreshToken()
+    public ActionResult<string> RefreshToken()
     {
-        try
-        {
-            return Ok(_userService.RefreshToken(Helper.GetTokenData(HttpContext)));
-        }
-        catch (Exception e)
-        {
-            return BadRequest("Invalid JWT token!"); //TODO: Change exception message
-        }
+        var result = _userService.RefreshToken(Helper.GetTokenData(HttpContext));
+        return result.ToActionResult(this);
     }
 
 }
