@@ -1,5 +1,8 @@
 using System.Transactions;
+using Ardalis.GuardClauses;
+using Ardalis.Result;
 using Domain;
+using Services.Exceptions;
 using Services.Interfaces.Input;
 using Services.Interfaces.Repository;
 using WebCommunication.Contracts.GameSessionContracts;
@@ -49,17 +52,17 @@ public class GameSessionService : IGameSessionService
         foundSessionUser.SessionId = sessionId;
     }
 
-    public void JoinSession(TokenData tokenData, JoinSessionRequest request)
+    public Result JoinSession(TokenData tokenData, JoinSessionRequest request)
     {
         //TODO: Valid User
 
         GameSession foundSession = GetGameSession(request.SessionId);
         if (foundSession.IsUserInSession(tokenData.Email))
-            throw new ArgumentException($"User with given email ({tokenData.Email}) is already in session ({request.SessionId})!");
+            return Result.Conflict($"User with given email ({tokenData.Email}) is already in session ({request.SessionId})!");
 
         var foundSessionUser = _repositoryGameSessionUser.GetUser(tokenData.Email);
         if(foundSessionUser == null)
-            throw new ArgumentException($"SessionUser (with email: {tokenData.Email}) is not added yet!");
+            return Result.NotFound($"SessionUser (with email: {tokenData.Email}) is not added yet!");
         
         //TODO: Add Timer to wait for connection from user
 
@@ -68,11 +71,26 @@ public class GameSessionService : IGameSessionService
             foundSession.AddUser(foundSessionUser);
             SetSessionForSessionUser(tokenData.Email, request.SessionId);
         }
+
+        return Result.Success();
     }
 
-    public void LeaveSession(TokenData tokenData, LeaveSessionRequest request)
+    public Result LeaveSession(TokenData tokenData, LeaveSessionRequest request)
     {
-        LeaveSession(tokenData.Email, request.SessionId);
+        try
+        {
+            LeaveSession(tokenData.Email, request.SessionId);
+        }
+        catch (UserNotFoundException e)
+        {
+            return Result.NotFound(e.Message);
+        }
+        catch (UserNotInSessionException e)
+        {
+            return Result.Conflict(e.Message);
+        }
+        
+        return Result.Success();
     }
 
     public void LeaveSession(string email, string sessionId)
@@ -80,10 +98,10 @@ public class GameSessionService : IGameSessionService
         GameSession foundSession = GetGameSession(sessionId);
         var foundSessionUser = _repositoryGameSessionUser.GetUser(email);
         if(foundSessionUser == null)
-            throw new ArgumentException($"SessionUser (with email: {email}) is not added yet!");
+            throw new UserNotFoundException($"User with given email ({email}) does not exist!");
         
         if (!foundSession.IsUserInSession(email))
-            throw new ArgumentException($"User with given email ({email}) is not in session ({sessionId})!");
+            throw new UserNotInSessionException($"User with given email ({email}) is not in session ({sessionId})!");
         
         using (TransactionScope scope = new TransactionScope())
         {
@@ -98,64 +116,95 @@ public class GameSessionService : IGameSessionService
         return foundSession.IsUserInSession(email);
     }
 
-    public List<GameSessionUser> GetAllUsersInSession(GetUsersInSessionRequest request)
+    public Result<List<GameSessionUser>> GetAllUsersInSession(GetUsersInSessionRequest request)
     {
         //TODO: Change type from GameSessionUser (where is password stored) to specific type
-        GameSession foundSession = GetGameSession(request.SessionId);
-        return foundSession.ActiveUsers.ToList();
+        try
+        {
+            return Result.Success(GetGameSession(request.SessionId).ActiveUsers.ToList());
+        }
+        catch (SessionNotFoundException e)
+        {
+            return Result.NotFound(e.Message);
+        }
     }
 
-    public void CreateSession(CreateSessionRequest request)
+    public Result CreateSession(CreateSessionRequest request)
     {
-        CreateSessionUniversal(request.SessionId,request.SessionName, GameSessionStatus.Active);
+        try
+        {
+            CreateSessionUniversal(request.SessionId,request.SessionName, GameSessionStatus.Active);
+        }
+        catch (SessionAlreadyExistException e)
+        {
+            return Result.Conflict(e.Message);
+        }
+        return Result.Success();
     }
 
     private void CreateSessionUniversal(string sessionId, string sessionName, GameSessionStatus status)
     {
         GameSession? foundActiveGameSession = _repositoryGame.GetSession(sessionId);
         if (foundActiveGameSession != null)
-            throw new Exception($"Session with given ID ({sessionId}) already exists!");
+            throw new SessionAlreadyExistException($"Session with given ID ({sessionId}) already exists!");
 
         GameSession session = GameSession.CreateSession(sessionId, sessionName, status);
         _repositoryGame.AddSession(session);
     }
     
 
-    public void PauseSession(PauseSessionRequest request)
+    public Result PauseSession(PauseSessionRequest request)
     {
         //TODO: Add validation for user, is he in the session, or is he available to do administrative things
-        GameSession foundSession = GetGameSession(request.SessionId);
-        foundSession.Status = GameSessionStatus.Inactive;
+        //TODO: Check for status of session, if it is active, then pause it, if it is paused, then return conflict
+        try
+        {
+            GameSession foundSession = GetGameSession(request.SessionId);
+            foundSession.Status = GameSessionStatus.Inactive;
+        }
+        catch (SessionNotFoundException e)
+        {
+            return Result.NotFound(e.Message);
+        }
+        
+        return Result.Success();
     }
 
-    public GameSession GetSession(GetSessionRequest request)
+    public Result<GameSession> GetSession(GetSessionRequest request)
     {
-        return GetGameSession(request.SessionId);
+        try
+        {
+            return Result<GameSession>.Success(GetGameSession(request.SessionId));
+        }
+        catch (SessionNotFoundException e)
+        {
+            return Result<GameSession>.NotFound(e.Message);
+        }
     }
     public List<GameSession> GetAllSessions()
     {
         return  _repositoryGame.GetSessions();
     }
 
-    public List<GameSession> GetAllSessions(GetAllSessionsRequest request)
+    public Result<List<GameSession>> GetAllSessions(GetAllSessionsRequest request)
     {
         if(request.Status == null)
-            return GetAllSessions();
+            return Result.Success(GetAllSessions());
         
-        bool result = Enum.TryParse(request.Status, out GameSessionStatus status);
-
-        if (!result) {
-            throw new ArgumentException($"Given status ({request.Status}) does not exist!");
+        bool result = Enum.TryParse(request.Status, out GameSessionStatus status); 
+        if (!result)
+        {
+            return Result.Conflict($"Given status ({request.Status}) does not exist!");
         }
 
-        return _repositoryGame.GetSessions(status);
+        return Result.Success(_repositoryGame.GetSessions(status));
     }
 
     private GameSession GetGameSession(string sessionId)
     {
         GameSession? foundSession = _repositoryGame.GetSession(sessionId);
         if (foundSession == null)
-            throw new ArgumentException($"Session with given ID ({sessionId}) does not exist!");
+            throw new SessionNotFoundException($"Session with given ID ({sessionId}) does not exist!");
         return foundSession;
     }
 

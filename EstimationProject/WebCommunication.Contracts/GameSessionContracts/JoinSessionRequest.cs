@@ -4,11 +4,6 @@ namespace WebCommunication.Contracts.GameSessionContracts;
 
 public record JoinSessionRequest
 {
-    public JoinSessionRequest(string sessionId)
-    {
-        SessionId = sessionId;
-    }
-
     [Required]
-    public string SessionId { get; init; }
+    public string SessionId { get; init; } = null!;
 }
