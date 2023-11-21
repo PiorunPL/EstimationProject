@@ -78,7 +78,7 @@ public class GameSessionServiceTest
             mockRepositoryGameSession.Object, mockRepositoryGameSessionUser.Object);
         
         //Act
-        gameSessionService.JoinSession(new TokenData(user.Email, user.Username), new JoinSessionRequest(gameSession.GameSessionId));
+        gameSessionService.JoinSession(new TokenData(user.Email, user.Username), new JoinSessionRequest{ SessionId = gameSession.GameSessionId });
 
         //Assert
         Assert.Contains(gameSession.ActiveUsers,

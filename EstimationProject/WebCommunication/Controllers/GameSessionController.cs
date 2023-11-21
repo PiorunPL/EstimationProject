@@ -1,3 +1,4 @@
+using Ardalis.Result.AspNetCore;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,111 +21,52 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPut("join")]
-    public IActionResult JoinSession(JoinSessionRequest request)
+    public ActionResult JoinSession(JoinSessionRequest request)
     {
-        try
-        {
-            _gameSessionService.JoinSession(Helper.GetTokenData(HttpContext), request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok();
+        var result = _gameSessionService.JoinSession(Helper.GetTokenData(HttpContext), request);
+        return result.ToActionResult(this);
     }
 
     [HttpPut("leave")]
-    public IActionResult LeaveSession(LeaveSessionRequest request)
+    public ActionResult LeaveSession(LeaveSessionRequest request)
     {
-        try
-        {
-            _gameSessionService.LeaveSession(Helper.GetTokenData(HttpContext), request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok();
+        var result = _gameSessionService.LeaveSession(Helper.GetTokenData(HttpContext), request);
+        return result.ToActionResult(this);
     }
 
     [HttpGet("users")]
-    public IActionResult GetUsersInSession([FromQuery] GetUsersInSessionRequest request)
+    public ActionResult<List<GameSessionUser>> GetUsersInSession([FromQuery] GetUsersInSessionRequest request)
     {
-        List<GameSessionUser> result;
-        try
-        {
-            result = _gameSessionService.GetAllUsersInSession(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok(result);
+        var result = _gameSessionService.GetAllUsersInSession(request);
+        return result.ToActionResult(this);
     }
 
     [HttpPost("create")]
-    public IActionResult CreateSession(CreateSessionRequest request)
+    public ActionResult CreateSession(CreateSessionRequest request)
     {
-        try
-        {
-            _gameSessionService.CreateSession(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok();
+        var result = _gameSessionService.CreateSession(request);
+        return result.ToActionResult(this);
     }
 
     [HttpPut("pause")]
-    public IActionResult PauseSession(PauseSessionRequest request)
+    public ActionResult PauseSession(PauseSessionRequest request)
     {
-        try
-        {
-            _gameSessionService.PauseSession(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok();
+        var result = _gameSessionService.PauseSession(request);
+        return result.ToActionResult(this);
     }
 
     [HttpGet("sessions")]
-    public IActionResult GetAllSessions([FromQuery] GetAllSessionsRequest request)
+    public ActionResult<List<GameSession>> GetAllSessions([FromQuery] GetAllSessionsRequest request)
     {
-        List<GameSession> result;
-        try
-        {
-            result = _gameSessionService.GetAllSessions(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok(result);
+        var result = _gameSessionService.GetAllSessions(request);  
+        return result.ToActionResult(this);
     }
 
     [HttpGet("")]
-    public IActionResult GetSession([FromQuery] GetSessionRequest request)
+    public ActionResult<GameSession> GetSession([FromQuery] GetSessionRequest request)
     {
-        GameSession result;
-        try
-        {
-            result = _gameSessionService.GetSession(request);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Something went wrong!\nError message: {e.Message}");
-        }
-
-        return Ok(result);
+        var result = _gameSessionService.GetSession(request);
+        return result.ToActionResult(this);
     }
     
 }

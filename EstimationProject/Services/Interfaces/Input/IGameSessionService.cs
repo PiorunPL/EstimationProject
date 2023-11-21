@@ -1,3 +1,4 @@
+using Ardalis.Result;
 using Domain;
 using WebCommunication.Contracts.GameSessionContracts;
 using WebCommunication.Contracts.Other;
@@ -10,16 +11,16 @@ public interface IGameSessionService
     public void AddNewSessionUser(string email); 
     public void RemoveSessionUser(string email);
     public void SetSessionForSessionUser(string email, string? sessionId);
-    public void JoinSession(TokenData tokenData, JoinSessionRequest request);
-    public void LeaveSession(TokenData tokenData, LeaveSessionRequest request);
+    public Result JoinSession(TokenData tokenData, JoinSessionRequest request);
+    public Result LeaveSession(TokenData tokenData, LeaveSessionRequest request);
     public void LeaveSession(string email, string sessionId); //For Hub
     public bool IsUserInSession(string email, string sessionId);
-    public List<GameSessionUser> GetAllUsersInSession(GetUsersInSessionRequest request);
+    public Result<List<GameSessionUser>> GetAllUsersInSession(GetUsersInSessionRequest request);
     
     //Session Related
-    public void CreateSession(CreateSessionRequest request);
-    public void PauseSession(PauseSessionRequest request);
-    public GameSession GetSession(GetSessionRequest request);
+    public Result CreateSession(CreateSessionRequest request);
+    public Result PauseSession(PauseSessionRequest request);
+    public Result<GameSession> GetSession(GetSessionRequest request);
     public List<GameSession> GetAllSessions();
-    public List<GameSession> GetAllSessions(GetAllSessionsRequest request);
+    public Result<List<GameSession>> GetAllSessions(GetAllSessionsRequest request);
 }
