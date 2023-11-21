@@ -157,15 +157,22 @@ public class GameSessionService : IGameSessionService
     {
         //TODO: Add validation for user, is he in the session, or is he available to do administrative things
         //TODO: Check for status of session, if it is active, then pause it, if it is paused, then return conflict
+        GameSession foundSession;
         try
         {
-            GameSession foundSession = GetGameSession(request.SessionId);
-            foundSession.Status = GameSessionStatus.Inactive;
+            foundSession = GetGameSession(request.SessionId);
         }
         catch (SessionNotFoundException e)
         {
             return Result.NotFound(e.Message);
         }
+
+        if (foundSession.Status == GameSessionStatus.Inactive)
+        {
+            return Result.Conflict($"Session with given ID ({request.SessionId}) is already paused!");
+        }
+        
+        foundSession.Status = GameSessionStatus.Inactive;
         
         return Result.Success();
     }
