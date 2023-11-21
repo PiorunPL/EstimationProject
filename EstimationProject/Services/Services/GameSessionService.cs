@@ -156,7 +156,6 @@ public class GameSessionService : IGameSessionService
     public Result PauseSession(PauseSessionRequest request)
     {
         //TODO: Add validation for user, is he in the session, or is he available to do administrative things
-        //TODO: Check for status of session, if it is active, then pause it, if it is paused, then return conflict
         GameSession foundSession;
         try
         {
