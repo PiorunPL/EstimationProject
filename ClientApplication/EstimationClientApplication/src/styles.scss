@@ -1,0 +1,14 @@
+
+// Global Styles
+@import 'variables';
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
+
+body {
+  font-family: $font-family;
+  font-size: $font-size;
+  font-weight: 400;
+  color: map-get($colors, primary );
+  background-color: map-get($colors, background-neutral);
+}
+// Rest of your SCSS code...

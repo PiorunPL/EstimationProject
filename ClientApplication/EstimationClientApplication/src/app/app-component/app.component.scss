@@ -1,0 +1,31 @@
+@import '../../variables';
+
+h1{
+  padding: 20px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  border-bottom: 1px solid map-get($colors, secondary );
+}
+
+.log-component{
+  padding: 20px;
+  border: 1px solid map-get($colors, secondary );
+  border-radius: 5px;
+  margin: 20px;
+}
+
+.register-component{
+  padding: 20px;
+  border: 1px solid map-get($colors, secondary );
+  border-radius: 5px;
+  margin: 20px;
+}
+
+.wrapper{
+  border: 1px solid map-get($colors, tertiary );
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
