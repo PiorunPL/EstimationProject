@@ -8,7 +8,32 @@ body {
   font-family: $font-family;
   font-size: $font-size;
   font-weight: 400;
-  color: map-get($colors, primary );
-  background-color: map-get($colors, background-neutral);
+  color: map-get($colors, blackes );
+  background-color: map-get($colors, whites);
+  display: block;
+  // border: 2px solid map-get($colors, accentIndigo1 );
+  min-width: min-content;
+  margin: 0;
 }
+
+button {
+  font-family: $font-family;
+  font-size: $font-size;
+  font-weight: 400;
+  color: map-get($colors, blackes );
+  background-color: map-get($colors, whites);
+  padding: 1rem;
+  border: 2px solid map-get($colors, accentIndigo1 );
+  color: map-get($colors, accentIndigo2 );
+  border-radius: 5px;
+  transition: all 0.5s ease;
+}
+
+button:active {
+  border: 2px solid map-get($colors, accentIndigo2 );
+  background-color: map-get($colors, accentIndigo );
+  color: map-get($colors, whites );
+}
+
+
 // Rest of your SCSS code...

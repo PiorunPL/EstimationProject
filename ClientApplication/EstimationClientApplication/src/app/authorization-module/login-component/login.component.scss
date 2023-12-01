@@ -1,0 +1,19 @@
+.login-form {
+    // border: 3px solid black;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    input {
+        width: 80%;
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    button {
+        padding: 1rem;
+        margin: 1rem;
+    }
+}
