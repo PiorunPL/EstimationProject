@@ -41,7 +41,7 @@ h1{
   margin: 20px;
 }
 
-.component-box:hover{
+.component-box:hover, .component-box:focus-within{
   border: 3px solid map-get($colors, blackes );
   background-color: map-get($colors, whites1 );
 }
