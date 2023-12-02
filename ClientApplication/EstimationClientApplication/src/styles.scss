@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
 
 
-body {
+body{
   font-family: $font-family;
   font-size: $font-size;
   font-weight: 400;
@@ -20,20 +20,47 @@ button {
   font-family: $font-family;
   font-size: $font-size;
   font-weight: 400;
+  min-width: 100px;
   color: map-get($colors, blackes );
-  background-color: map-get($colors, whites);
+  background-color: map-get($colors, blackes5);
   padding: 1rem;
   border: 2px solid map-get($colors, accentIndigo1 );
   color: map-get($colors, accentIndigo2 );
-  border-radius: 5px;
-  transition: all 0.5s ease;
+  border-radius: 20px;
+  transition-property: background-color, color, border;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+}
+
+button:hover {
+  background-color: map-get($colors, lighterIndigo1 );
 }
 
 button:active {
   border: 2px solid map-get($colors, accentIndigo2 );
   background-color: map-get($colors, accentIndigo );
   color: map-get($colors, whites );
+  // outline: none;
 }
 
+button:disabled {
+  color:gray;
+  background-color: map-get($colors, blackes4);
+  border-color: map-get($colors, blackes2 );
+}
+
+input {
+  box-sizing: border-box;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid map-get($colors, blackes2 );
+}
+
+
+
+*:focus {
+  outline: 5px solid map-get($colors, accentIndigo );
+  outline-style: double;
+}
 
 // Rest of your SCSS code...

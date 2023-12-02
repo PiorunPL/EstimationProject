@@ -19,8 +19,9 @@ h1{
   background-color: map-get($colors, whites );
   align-items: center;
   justify-content: center;
+  transform: scaleY(1);
 
-  transition-property: border, background-color;
+  transition-property: border, background-color, transform;
   transition-duration: 1s;
   transition-timing-function: ease;
 
@@ -43,7 +44,7 @@ h1{
 
 .component-box:hover, .component-box:focus-within{
   border: 3px solid map-get($colors, blackes );
-  background-color: map-get($colors, whites1 );
+  background-color: map-get($colors, lighterIndigo2 );
 }
 
 .wrapper{

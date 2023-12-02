@@ -1,42 +1,57 @@
-<div >
-    <form class="register-form" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
-        
-        <input name="email" type="email" placeholder="Email" [(ngModel)]="email" #ctrl="ngModel" required pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$">
-        <div *ngIf="ctrl.invalid && (ctrl.dirty || ctrl.touched)" class="alert">
-            <div *ngIf="ctrl.errors?.['required']">
-                Email is required.
-            </div>
-            <div *ngIf="ctrl.errors?.['pattern']">
-                Email is invalid.
+<div>
+    <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <h2>Sign up</h2>
+        <div class="container-for-input">
+            <label for="email">Email</label>
+            <input type="email" formControlName="email" placeholder="Email">
+            <div *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)"
+                class="alert">
+                <div *ngIf="registerForm.controls['email'].errors?.['required']">
+                    Email is required.
+                </div>
+                <div *ngIf="registerForm.controls['email'].errors?.['pattern']">
+                    Email is invalid.
+                </div>
             </div>
         </div>
 
-        <input name="username" type="text" placeholder="Username" [(ngModel)]="username"  #ctrl1="ngModel" required minlength="5" maxlength="100">
-        <div *ngIf="ctrl1.invalid && (ctrl1.dirty || ctrl1.touched)" class="alert">
-            <div *ngIf="ctrl1.errors?.['required']">
-                Username is required.
+        <div class="container-for-input">
+            <label for="username">Username</label>
+            <input type="text" formControlName="username" placeholder="Username">
+            <div *ngIf="registerForm.controls['username'].invalid && (registerForm.controls['username'].dirty || registerForm.controls['username'].touched)"
+                class="alert">
+                <div *ngIf="registerForm.controls['username'].errors?.['required']">
+                    Username is required.
+                </div>
+                <div *ngIf="registerForm.controls['username'].errors?.['minlength']">
+                    Username must be at least 5 characters long.
+                </div>
+                <div *ngIf="registerForm.controls['username'].errors?.['maxlength']">
+                    Username cannot be more than 100 characters long.
+                </div>
             </div>
-            <div *ngIf="ctrl1.errors?.['minlength']">
-                Username must be at least 5 characters long.
-            </div>
-            <div *ngIf="ctrl1.errors?.['maxlength']">
-                Username cannot be more than 100 characters long.
+
+        </div>
+
+        <div class="container-for-input">
+            <label for="password">Password</label>
+            <input type="password" formControlName="password" placeholder="Password">
+            <div *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)"
+                class="alert">
+                <div *ngIf="registerForm.controls['password'].errors?.['required']">
+                    Password is required.
+                </div>
+                <div *ngIf="registerForm.controls['password'].errors?.['minlength']">
+                    Password must be at least 10 characters long.
+                </div>
+                <div *ngIf="registerForm.controls['password'].errors?.['maxlength']">
+                    Password cannot be more than 50 characters long.
+                </div>
             </div>
         </div>
 
-        <input name="password" type="password" placeholder="Password" [(ngModel)]="password" #ctrl2="ngModel"required minlength="10" maxlength="50">
-        <div *ngIf="ctrl2.invalid && (ctrl2.dirty || ctrl2.touched)" class="alert">
-            <div *ngIf="ctrl2.errors?.['required']">
-                Password is required.
-            </div>
-            <div *ngIf="ctrl2.errors?.['minlength']">
-                Password must be at least 10 characters long.
-            </div>
-            <div *ngIf="ctrl2.errors?.['maxlength']">
-                Password cannot be more than 50 characters long.
-            </div>
-        </div>
 
-        <button>Register</button>
+        <button type="submit" [disabled]="registerForm.invalid">Register</button>
     </form>
 </div>

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { PatternValidator } from '@angular/forms';
 
 @Component({
@@ -8,20 +8,23 @@ import { PatternValidator } from '@angular/forms';
     styleUrl: './register.component.scss'
 })
 
-export class RegisterComponent {
-    username: any;
-    password: any;
-    email: any;
+export class RegisterComponent implements OnInit {
 
-    constructor() { 
-        this.username = '';
-        this.password = '';
-        this.email = '';
+    registerForm!: FormGroup;
+
+    constructor(private formBuilder: FormBuilder) { }
+
+    ngOnInit() {
+        this.registerForm = this.formBuilder.group({
+            email: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
+            username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+            password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(50)]],
+        });
     }
 
-    onSubmit(form: NgForm) {
-        console.log(form);
-        form.valid ? console.log('valid') : console.log('invalid');
+    onSubmit() {
+        console.log(this.registerForm.value);
+        this.registerForm.valid ? console.log('valid') : console.log('invalid');
     }
 }
 
