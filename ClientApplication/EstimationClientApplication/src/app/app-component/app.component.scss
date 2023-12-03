@@ -19,9 +19,8 @@ h1{
   background-color: map-get($colors, whites );
   align-items: center;
   justify-content: center;
-  transform: scaleY(1);
 
-  transition-property: border, background-color, transform;
+  transition-property: border, background-color;
   transition-duration: 1s;
   transition-timing-function: ease;
 

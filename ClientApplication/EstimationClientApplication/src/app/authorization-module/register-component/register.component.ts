@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { PatternValidator } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IAuthorizationAppLogic } from '../../../interfaces/application-logic/authorization-app-logic.interface';
 
 @Component({
     selector: 'register-component',
@@ -12,7 +12,10 @@ export class RegisterComponent implements OnInit {
 
     registerForm!: FormGroup;
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(
+        @Inject('IAuthorizationAppLogic') private authorizationAppLogic: IAuthorizationAppLogic,
+        private formBuilder: FormBuilder
+    ) { }
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({

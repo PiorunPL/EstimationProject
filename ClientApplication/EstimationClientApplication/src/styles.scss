@@ -22,7 +22,7 @@ button {
   font-weight: 400;
   min-width: 100px;
   color: map-get($colors, blackes );
-  background-color: map-get($colors, blackes5);
+  background-color: map-get($colors, lighterIndigo2);
   padding: 1rem;
   border: 2px solid map-get($colors, accentIndigo1 );
   color: map-get($colors, accentIndigo2 );
@@ -61,6 +61,30 @@ input {
 *:focus {
   outline: 5px solid map-get($colors, accentIndigo );
   outline-style: double;
+}
+
+input:focus,
+input.ng-touched.ng-invalid:not(form):focus   {
+    // border-left: 5px solid #42A948;
+   
+    // outline: 10px solid #42A948;
+    outline: 5px solid map-get($colors, accentIndigo );
+    outline-style: double;
+    // border: none;
+    // outline: none;
+    /* green */
+}
+
+form .ng-valid {
+    // border-left: 5px solid #42A948;
+    outline: 1px solid #42A948;
+    /* green */
+}
+
+input.ng-touched.ng-invalid:not(form)  {
+    // border-left: 5px solid #a94442;
+    outline: 1px solid #a94442;
+    /* red */
 }
 
 // Rest of your SCSS code...
