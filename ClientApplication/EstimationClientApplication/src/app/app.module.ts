@@ -4,10 +4,11 @@ import { NgModule } from "@angular/core";
 import { AppComponent } from "./app-component/app.component";
 import { AuthorizationInteractorService } from "../services/application-logic/authorization-interactor.service";
 import { AuthorizationService } from "../services/business-logic/authorization.service";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
     declarations: [AppComponent],
-    imports: [BrowserModule, AuthorizationModule],
+    imports: [BrowserModule, HttpClientModule, AuthorizationModule],
     providers: [
         { provide: 'IAuthorizationAppLogic', useClass: AuthorizationInteractorService },
         { provide: 'IAuthorizationBusinessLogic', useClass: AuthorizationService }
