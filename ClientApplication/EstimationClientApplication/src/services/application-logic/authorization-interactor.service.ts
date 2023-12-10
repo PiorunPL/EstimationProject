@@ -14,24 +14,23 @@ export class AuthorizationInteractorService implements IAuthorizationAppLogic {
 
     token: string = '';
 
-    login(email: string, password: string): void {
-        try {
-            this.token = this.authorizationBusinessLogic.login(email, password);
-        } catch (error) {
-            console.log(error);
-        }
+    async login(email: string, password: string): Promise<void> {
 
-        console.log("Token: " + this.token);
+        try {
+            this.token = await this.authorizationBusinessLogic.login(email, password)
+            console.log("Token from login: " + this.token);
+        } catch (err) {
+            console.error("Error: Login interactor error\n", err);
+        }
     }
 
-    register(email: string, username: string, password: string): void {
+    async register(email: string, username: string, password: string): Promise<void> {
         try {
-            this.token = this.authorizationBusinessLogic.register(email, username, password);
-        } catch (error) {
-            console.log(error);
-        }
-
-        console.log("Token: " + this.token);
+            this.token = await this.authorizationBusinessLogic.register(email, username, password);
+            console.log("Token from register: " + this.token);
+        } catch (err) {
+            console.error("Error: Register interactor error\n", err);
+        }   
     }
 
 }

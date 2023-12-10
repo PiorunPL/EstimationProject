@@ -26,8 +26,7 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.registerForm.value);
-        this.registerForm.valid ? console.log('valid') : console.log('invalid');
+        this.authorizationAppLogic.register(this.registerForm.value.email, this.registerForm.value.username, this.registerForm.value.password);
     }
 }
 

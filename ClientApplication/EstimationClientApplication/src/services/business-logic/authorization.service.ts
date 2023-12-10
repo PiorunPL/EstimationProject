@@ -5,32 +5,56 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 @Injectable({
     providedIn: 'root',
 })
-export class AuthorizationService implements IAuthorizationBusinessLogic{
+export class AuthorizationService implements IAuthorizationBusinessLogic {
 
     private httpOptions = {
         headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-        })
+            'Content-Type': 'application/json'
+        }),
+        responseType: 'text' as 'json',
     };
 
     constructor(private http: HttpClient) { }
 
-    login(email : string, password : string) : string{
-        var token: string = "";
+    async login(email: string, password: string): Promise<string> {
         var body = {
             email: email,
             password: password
         };
 
-        this.http.post<string>('https://localhost:7114/api/authorize/login', body, this.httpOptions).subscribe((data) => {
-            console.log(data);
-            token = data;
+        var result: Promise<string> = new Promise((resolve, reject) => {
+            this.http.post<string>('https://localhost:7114/api/authorize/login', body, this.httpOptions).subscribe({
+                next: data => {
+                    resolve(data);
+                },
+                error: error => {
+                    error.error = error.error ? JSON.parse(error.error) : error;
+                    reject(new Error(JSON.stringify(error, null, 2)));
+                }
+            });
         });
-        return token;
+        return result;
     }
-    
-    register(email : string, username : string, password : string) : string {
-        return 'test_token';
+
+    async register(email: string, username: string, password: string): Promise<string> {
+        var body = {
+            email: email,
+            username: username,
+            password: password
+        };
+
+        var result: Promise<string> = new Promise((resolve, reject) => {
+            this.http.post<string>('https://localhost:7114/api/authorize/register', body, this.httpOptions).subscribe({
+                next: data => {
+                    resolve(data);
+                },
+                error: error => {
+                    error.error = error.error ? JSON.parse(error.error) : error;
+                    reject(new Error(JSON.stringify(error, null, 2)));
+                }
+            });
+        });
+
+        return result;
     }
 }
