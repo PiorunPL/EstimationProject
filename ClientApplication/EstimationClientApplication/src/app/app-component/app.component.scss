@@ -1,0 +1,64 @@
+@import '../../variables';
+
+h1{
+  padding: 20px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  border-bottom: 5px solid map-get($colors, accentIndigo );
+  background-color: map-get($colors, blackes );
+  border-radius: 5px;
+  color: map-get($colors, whites );
+  // min-width: 900px;
+}
+
+.component-box{
+  width: 30%;
+  min-width: 300px; //Something to change?
+  border: 3px solid map-get($colors, blackes2 ); 
+  background-color: map-get($colors, whites );
+  align-items: center;
+  justify-content: center;
+
+  transition-property: border, background-color;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+
+  // @media screen and (max-width: 800px) {
+  //   width: 80%;
+  // }
+}
+
+.log-component{
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px; 
+}
+
+.register-component{
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+.component-box:hover, .component-box:focus-within{
+  border: 3px solid map-get($colors, blackes );
+  background-color: map-get($colors, lighterIndigo2 );
+}
+
+.wrapper{
+  // border: 3px solid map-get($colors, blackes );
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  // align-items: center; //stretch for full size, but its top by default  
+  min-width: min-content;
+  background-color: map-get($colors, whites );
+}
+
+.main-wrapper {
+  min-width: min-content;
+  // border: 3px solid map-get($colors, blackes );
+  margin: 20px;
+}

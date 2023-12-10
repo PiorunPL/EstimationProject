@@ -22,8 +22,8 @@ public class Password
         var salt = RandomNumberGenerator.GetBytes(KeySize);
         var hash = HashPassword(plainTextPassword, salt);
         
-        var hashText = Encoding.UTF8.GetString(hash);
-        var saltText = Encoding.UTF8.GetString(salt);
+        var hashText = Convert.ToBase64String(hash);
+        var saltText = Convert.ToBase64String(salt);
         
         var password = new Password(hashText, saltText);
         return password;
@@ -31,8 +31,8 @@ public class Password
 
     public bool ComparePassword(string passwordToCompare)
     {
-        var hashToCompare = HashPassword(passwordToCompare, Encoding.UTF8.GetBytes(Salt));
-        var hashTextToCompare = Encoding.UTF8.GetString(hashToCompare);
+        var hashToCompare = HashPassword(passwordToCompare, Convert.FromBase64String(Salt));
+        var hashTextToCompare = Convert.ToBase64String(hashToCompare);
 
         return HashedPassword.Equals(hashTextToCompare);
     }
