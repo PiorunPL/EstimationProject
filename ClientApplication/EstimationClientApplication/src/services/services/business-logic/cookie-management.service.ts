@@ -12,7 +12,7 @@ export class CookieManagementService implements ICookieManagement {
         let cookieString: string = name + "=" + value + ";";
         if (expires) {
             let date: Date = new Date();
-            date.setTime(date.getTime() + expires * 24 * 60 * 60 * 1000);
+            date.setTime(date.getTime() + expires * 60 * 60 * 1000); //expires in hours
             cookieString += "expires=" + date.toUTCString() + ";";
         }
         if (path) {
