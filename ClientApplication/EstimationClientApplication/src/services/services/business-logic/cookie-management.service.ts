@@ -6,6 +6,8 @@ import {Injectable} from "@angular/core";
 })
 export class CookieManagementService implements ICookieManagement {
 
+    constructor() { }
+
     setCookie(name: string, value: string, expires?: number, path?: string): void {
         let cookieString: string = name + "=" + value + ";";
         if (expires) {
@@ -24,7 +26,7 @@ export class CookieManagementService implements ICookieManagement {
         let cookies: string[] = document.cookie.split(';');
 
         for (let i = 0; i < cookies.length; i++) {
-            let cookie: string = cookies[i];
+            let cookie: string = cookies[i].trim();
             if (cookie.indexOf(cookieName) == 0) {
                 return cookie.substring(cookieName.length, cookie.length);
             }
