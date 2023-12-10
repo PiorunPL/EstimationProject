@@ -55,7 +55,7 @@ public class UserService : IUserService
         if (foundUser == null)
             return Result.NotFound("User with given email does not exist");
 
-        if (foundUser.Password.ComparePassword(request.Password))
+        if (!foundUser.Password.ComparePassword(request.Password))
             return Result.Unauthorized(); //TODO: Potentially to change return HTTP code
 
         return Result.Success(GenerateToken(foundUser));
