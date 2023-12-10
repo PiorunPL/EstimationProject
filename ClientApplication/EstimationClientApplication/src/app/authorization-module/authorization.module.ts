@@ -9,7 +9,7 @@ import { RegisterComponent } from "./register-component/register.component";
     imports: [BrowserModule, ReactiveFormsModule, FormsModule],
     exports: [LoginComponent, RegisterComponent],
     providers: [
-        //TODO: Think about providing authorization services here instead of app.module.ts
+        //TODO: Think about providing authorization services here instead of app.module.ts (see src/app/app.module.ts)
     ],
     bootstrap: [LoginComponent, RegisterComponent],
 })
