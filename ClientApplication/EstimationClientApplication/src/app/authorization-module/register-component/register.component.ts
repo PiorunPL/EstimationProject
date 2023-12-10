@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IAuthorizationAppLogic } from '../../../interfaces/application-logic/authorization-app-logic.interface';
+import { IAuthorizationAppLogic } from '../../../services/interfaces/application-logic/authorization-app-logic.interface';
 
 @Component({
     selector: 'register-component',

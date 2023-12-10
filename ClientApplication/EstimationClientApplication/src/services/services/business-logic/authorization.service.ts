@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { IAuthorizationBusinessLogic } from "../../interfaces/business-logic/authorization-business-logic.interface";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import {Injectable} from "@angular/core";
+import {IAuthorizationBusinessLogic} from "../../interfaces/business-logic/authorization-business-logic.interface";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +22,7 @@ export class AuthorizationService implements IAuthorizationBusinessLogic {
             password: password
         };
 
-        var result: Promise<string> = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.http.post<string>('https://localhost:7114/api/authorize/login', body, this.httpOptions).subscribe({
                 next: data => {
                     resolve(data);
@@ -33,17 +33,16 @@ export class AuthorizationService implements IAuthorizationBusinessLogic {
                 }
             });
         });
-        return result;
     }
 
     async register(email: string, username: string, password: string): Promise<string> {
-        var body = {
+        let body = {
             email: email,
             username: username,
             password: password
         };
 
-        var result: Promise<string> = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.http.post<string>('https://localhost:7114/api/authorize/register', body, this.httpOptions).subscribe({
                 next: data => {
                     resolve(data);
@@ -54,7 +53,5 @@ export class AuthorizationService implements IAuthorizationBusinessLogic {
                 }
             });
         });
-
-        return result;
     }
 }
